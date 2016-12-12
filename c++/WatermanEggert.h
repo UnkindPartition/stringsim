@@ -47,6 +47,42 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, s
   }}
 }
 
+// a_start and a_end are *half-open* ends of the aligned subsequence
+template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b,
+  const std::vector<double> &matrix,
+  size_t &a_begin, size_t &a_end, size_t &b_begin, size_t &b_end) {
+
+  const size_t m = a.size(), // rows
+               n = b.size(); // columns
+
+  std::vector<double>::const_iterator end = std::max_element(matrix.begin(), matrix.end());
+
+  size_t
+    i = (end - matrix.begin()) / n,
+    j = (end - matrix.begin()) % n;
+
+  a_begin = a_end = i + 1;
+  b_begin = b_end = j + 1;
+
+  double this_value;
+
+  // traceback
+  while ((i > 0 || j > 0) && (this_value = matrix[i*n+j]) > 0) {
+    a_begin = i;
+    b_begin = j;
+
+    if (i > 0 && j > 0 && this_value == matrix[(i-1) * n + (j-1)] + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value)) {
+      i--; j--;
+    } else if (i > 0 && this_value == matrix[(i-1) * n + j] + scoring.space_value) {
+      i--;
+    } else if (j > 0 && this_value == matrix[i * n + (j - 1)] + scoring.space_value) {
+      j--;
+    } else {
+      break; // e.g. we are at (0,3), and this is the beginning
+    }
+  }
+}
+
 template<typename V> double similarity(Scoring scoring, const V &a, const V &b) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
