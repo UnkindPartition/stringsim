@@ -13,6 +13,9 @@ struct Scoring {
 template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, std::vector<double> &matrix) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
+  if (n == 0 || m == 0) {
+    return;
+  }
 
   // fill upper-left corner
   matrix[0] = std::max(
