@@ -6,7 +6,7 @@ using namespace std;
 using namespace testing;
 
 vector<long> alloc_fill_matrix(Scoring scoring, string a, string b) {
-  vector<long> matrix(a.size() * b.size());
+  vector<long> matrix(a.size() * b.size(), 0);
   fill_matrix(scoring, a, b, matrix);
   return matrix;
 }
