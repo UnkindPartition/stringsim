@@ -10,7 +10,10 @@ struct Scoring {
          space_value;
 };
 
-template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, std::vector<long> &matrix) {
+// Fill a sub-matrix a_begin to a_end, b_begin to b_end (half-open ranges)
+template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
+  size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
+  std::vector<long> &matrix) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
   if (n == 0 || m == 0) {
@@ -18,29 +21,29 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, s
   }
 
   // fill upper-left corner
-  matrix[0] = std::max(
-    a[0] == b[0] ? scoring.match_value : scoring.mismatch_value,
+  matrix[a_begin * n + b_begin] = std::max(
+    a[a_begin] == b[b_begin] ? scoring.match_value : scoring.mismatch_value,
     0L
   );
 
   // fill upper row
-  for (size_t j = 1; j < n; j++) {
-    matrix[j] = std::max({
+  for (size_t j = b_begin + 1; j < b_end; j++) {
+    matrix[a_begin * n + j] = std::max({
       matrix[j-1] + scoring.space_value,
-      a[0] == b[j] ? scoring.match_value : scoring.mismatch_value,
+      a[a_begin] == b[j] ? scoring.match_value : scoring.mismatch_value,
       0L});
   }
   // fill leftmost column
-  for (size_t i = 1; i < m; i++) {
-    matrix[i * n] = std::max({
+  for (size_t i = a_begin + 1; i < a_end; i++) {
+    matrix[i * n + b_begin] = std::max({
       matrix[(i-1) * n] + scoring.space_value,
-      a[i] == b[0] ? scoring.match_value : scoring.mismatch_value,
+      a[i] == b[b_begin] ? scoring.match_value : scoring.mismatch_value,
       0L
     });
   }
   // fill the rest of the matrix
-  for (size_t i = 1; i < m; i++) {
-  for (size_t j = 1; j < n; j++) {
+  for (size_t i = a_begin + 1; i < a_end; i++) {
+  for (size_t j = b_begin + 1; j < b_end; j++) {
     matrix[i * n + j] = std::max({
       0L,
       matrix[(i-1) * n + (j-1)] + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value),
@@ -48,6 +51,14 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, s
       matrix[i * n + (j - 1)] + scoring.space_value
       });
   }}
+}
+
+// Unrestricted version of fill_matrix
+template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
+  std::vector<long> &matrix) {
+  const size_t m = a.size(), // rows
+               n = b.size(); // columns
+  fill_matrix(scoring, a, b, 0, m, 0, n, matrix);
 }
 
 // a_start and a_end are *half-open* ends of the aligned subsequence
