@@ -29,3 +29,12 @@ TEST(fill_matrix, case_one_empty) {
 TEST(fill_matrix, case_two_match) {
   ASSERT_THAT(alloc_fill_matrix(scoring, "ab", "abc"), ElementsAre(3,0,0,0,6,1));
 }
+TEST(fill_matrix, case_mismatch_in_long_match) {
+  ASSERT_THAT(alloc_fill_matrix(scoring, "abcde", "abdde"), ElementsAreArray({
+      3, 0, 0, 0, 0,
+      0, 6, 1, 0, 0,
+      0, 1, 4, 0, 0,
+      0, 0, 4, 7, 2,
+      0, 0, 0, 2, 10
+      }));
+}
