@@ -16,7 +16,7 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
   std::vector<long> &matrix) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
-  if (n == 0 || m == 0) {
+  if (a_begin >= a_end || b_begin >= b_end) {
     return;
   }
 

@@ -65,3 +65,61 @@ TEST(fill_matrix, case_restricted_3) {
       0, 0, 0, 1, 0
       }));
 }
+TEST(fill_matrix, case_restricted_edge_cases) {
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 0, 0, 0, 0), ElementsAreArray({
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 0, 1, 0, 0), ElementsAreArray({
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 0, 1, 0, 1), ElementsAreArray({
+      3, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 0, 2, 0, 1), ElementsAreArray({
+      3, 0, 0, 0, 0,
+      3, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 0, 3, 0, 2), ElementsAreArray({
+      3, 3, 0, 0, 0,
+      3, 6, 0, 0, 0,
+      3, 6, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 1, 4, 0, 2), ElementsAreArray({
+      0, 0, 0, 0, 0,
+      3, 3, 0, 0, 0,
+      3, 6, 0, 0, 0,
+      3, 6, 0, 0, 0,
+      0, 0, 0, 0, 0
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 4, 5, 4, 5), ElementsAreArray({
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 3
+      }));
+  ASSERT_THAT(alloc_fill_matrix(scoring, "aaaaa", "aaaaa", 4, 5, 3, 5), ElementsAreArray({
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 3, 3
+      }));
+}
