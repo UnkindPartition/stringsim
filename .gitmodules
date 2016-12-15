@@ -1,0 +1,4 @@
+[submodule "c++/rapidcheck"]
+	path = c++/rapidcheck
+	url = git@github.com:emil-e/rapidcheck.git
+  ignore = dirty
