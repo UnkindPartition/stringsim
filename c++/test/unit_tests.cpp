@@ -7,19 +7,19 @@ using namespace std;
 using namespace testing;
 
 TEST(fill_matrix, case_one_mismatch) {
-  ASSERT_THAT(alloc_fill_matrix("a", "b"), ElementsAre(0));
+  ASSERT_THAT(alloc_fill_matrix("a", "b").elements(), ElementsAre(0));
 }
 TEST(fill_matrix, case_one_match) {
-  ASSERT_THAT(alloc_fill_matrix("a", "a"), ElementsAre(3));
+  ASSERT_THAT(alloc_fill_matrix("a", "a").elements(), ElementsAre(3));
 }
 TEST(fill_matrix, case_one_empty) {
-  ASSERT_THAT(alloc_fill_matrix("abc", ""), ElementsAre());
+  ASSERT_THAT(alloc_fill_matrix("abc", "").elements(), ElementsAre());
 }
 TEST(fill_matrix, case_two_match) {
-  ASSERT_THAT(alloc_fill_matrix("ab", "abc"), ElementsAre(3,0,0,0,6,1));
+  ASSERT_THAT(alloc_fill_matrix("ab", "abc").elements(), ElementsAre(3,0,0,0,6,1));
 }
 TEST(fill_matrix, case_mismatch_in_long_match) {
-  ASSERT_THAT(alloc_fill_matrix("abcde", "abdde"), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("abcde", "abdde").elements(), ElementsAreArray({
       3, 0, 0, 0, 0,
       0, 6, 1, 0, 0,
       0, 1, 4, 0, 0,
@@ -28,19 +28,19 @@ TEST(fill_matrix, case_mismatch_in_long_match) {
       }));
 }
 TEST(fill_matrix, case_restricted_1) {
-  ASSERT_THAT(alloc_fill_matrix("ac", "ab", 0, 2, 1, 2), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("ac", "ab", 0, 2, 1, 2).elements(), ElementsAreArray({
       0, 0,
       0, 0,
       }));
 }
 TEST(fill_matrix, case_restricted_2) {
-  ASSERT_THAT(alloc_fill_matrix("ac", "abc", 0, 2, 1, 3), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("ac", "abc", 0, 2, 1, 3).elements(), ElementsAreArray({
       0, 0, 0,
       0, 0, 3,
       }));
 }
 TEST(fill_matrix, case_restricted_3) {
-  ASSERT_THAT(alloc_fill_matrix("abcde", "abdde", 2, 5, 1, 4), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("abcde", "abdde", 2, 5, 1, 4).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
@@ -49,56 +49,56 @@ TEST(fill_matrix, case_restricted_3) {
       }));
 }
 TEST(fill_matrix, case_restricted_edge_cases) {
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 0, 0, 0), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 0, 0, 0).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 1, 0, 0), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 1, 0, 0).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 1, 0, 1), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 1, 0, 1).elements(), ElementsAreArray({
       3, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 2, 0, 1), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 2, 0, 1).elements(), ElementsAreArray({
       3, 0, 0, 0, 0,
       3, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 3, 0, 2), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 0, 3, 0, 2).elements(), ElementsAreArray({
       3, 3, 0, 0, 0,
       3, 6, 0, 0, 0,
       3, 6, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 1, 4, 0, 2), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 1, 4, 0, 2).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       3, 3, 0, 0, 0,
       3, 6, 0, 0, 0,
       3, 6, 0, 0, 0,
       0, 0, 0, 0, 0
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 4, 5, 4, 5), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 4, 5, 4, 5).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 3
       }));
-  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 4, 5, 3, 5), ElementsAreArray({
+  ASSERT_THAT(alloc_fill_matrix("aaaaa", "aaaaa", 4, 5, 3, 5).elements(), ElementsAreArray({
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,
       0, 0, 0, 0, 0,

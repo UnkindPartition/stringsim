@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include "WatermanEggert/matrix.h"
 
 struct Scoring {
   long match_value,
@@ -11,12 +12,11 @@ struct Scoring {
 };
 
 template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a, const V &b,
-  size_t m, size_t n, size_t a_begin, size_t b_begin,
-  const std::vector<long> &matrix, size_t i, size_t j) {
+  const Cell &cell, size_t i, size_t j) {
 
-  long upper = i == a_begin ? 0 : matrix[(i-1) * n + j],
-       left  = j == b_begin ? 0 : matrix[i * n + (j-1)],
-       upper_left = (i == a_begin || j == b_begin) ? 0 : matrix[(i-1) * n + (j-1)];
+  long upper = i == cell.a_begin ? 0 : cell(i-1, j),
+       left  = j == cell.b_begin ? 0 : cell(i, j-1),
+       upper_left = (i == cell.a_begin || j == cell.b_begin) ? 0 : cell(i-1, j-1);
 
   long match_mistmatch_value = a[i] == b[j] ? scoring.match_value : scoring.mismatch_value;
 
@@ -29,27 +29,15 @@ template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a,
 }
 
 // Fill a sub-matrix a_begin to a_end, b_begin to b_end (half-open ranges)
-template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
-  size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
-  std::vector<long> &matrix) {
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-  if (a_begin >= a_end || b_begin >= b_end) {
+template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, Cell &cell) {
+  if (cell.a_begin >= cell.a_end || cell.b_begin >= cell.b_end) {
     return;
   }
 
-  for (size_t i = a_begin; i < a_end; i++) {
-  for (size_t j = b_begin; j < b_end; j++) {
-    matrix[i * n + j] = compute_matrix_elt(scoring, a, b, m, n, a_begin, b_begin, matrix, i, j);
+  for (size_t i = cell.a_begin; i < cell.a_end; i++) {
+  for (size_t j = cell.b_begin; j < cell.b_end; j++) {
+    cell(i, j) = compute_matrix_elt(scoring, a, b, cell, i, j);
   }}
-}
-
-// Unrestricted version of fill_matrix
-template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
-  std::vector<long> &matrix) {
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-  fill_matrix(scoring, a, b, 0, m, 0, n, matrix);
 }
 
 // a_start and a_end are *half-open* ends of the aligned subsequence
