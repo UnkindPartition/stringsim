@@ -116,7 +116,7 @@ static void clear_alignment(size_t m, size_t n, size_t a_begin, size_t a_end, si
 // Update a part of the matrix after the alignment is cleared
 template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
   size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
-  std::vector<long> matrix) {
+  std::vector<long> &matrix) {
 
   const size_t m = a.size(), // rows
                n = b.size(); // columns
@@ -136,6 +136,24 @@ template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
       }
     }
   }
+}
+
+// Update the whole matrix after the alignment is cleared. Unlike in
+// update_matrix_all, here a_begin etc. refer to the alignment, not the
+// submatrix to be updated!
+template<typename V> void update_matrix_all(Scoring scoring, const V &a, const V &b,
+  size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
+  std::vector<long> &matrix) {
+
+  const size_t m = a.size(), // rows
+               n = b.size(); // columns
+
+  // update upper-right corner
+  update_matrix(scoring, a, b, 0, a_begin, b_end, n, matrix);
+  // update lower-left corner
+  update_matrix(scoring, a, b, a_end, m, 0, b_begin, matrix);
+  // update lower-right corner
+  update_matrix(scoring, a, b, a_end, m, b_end, n, matrix);
 }
 
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
