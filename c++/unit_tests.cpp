@@ -154,3 +154,59 @@ TEST(clear_alignment, case_all) {
       0, 0, 0, 0,
       }));
 }
+TEST(clear_alignment_and_update, case1) {
+  const string a = "abbcccddb",
+               b = "acccbb";
+  auto matrix = alloc_fill_matrix(a, b);
+  size_t a_begin, a_end, b_begin, b_end;
+  ASSERT_THAT(matrix, ElementsAreArray({
+  //  a  c  c  c  b  b
+      3, 0, 0, 0, 0, 0, // a
+      0, 1, 0, 0, 3, 3, // b
+      0, 0, 0, 0, 3, 6, // b
+      0, 3, 3, 3, 0, 1, // c
+      0, 3, 6, 6, 1, 0, // c
+      0, 3, 6, 9, 4, 0, // c
+      0, 0, 1, 4, 7, 2, // d
+      0, 0, 0, 0, 2, 5, // d
+      0, 0, 0, 0, 3, 5, // b
+      }));
+
+  find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
+  ASSERT_EQ(3, a_begin); // eTwenty
+  ASSERT_EQ(6, a_end);
+  ASSERT_EQ(1, b_begin);
+  ASSERT_EQ(4, b_end);
+  clear_alignment_and_update(scoring, a, b, a_begin, a_end, b_begin, b_end, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+  //  a  c  c  c  b  b
+      3, 0, 0, 0, 0, 0, // a
+      0, 0, 0, 0, 3, 3, // b
+      0, 0, 0, 0, 3, 6, // b
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // d
+      0, 0, 0, 0, 0, 0, // d
+      0, 0, 0, 0, 3, 3, // b
+      }));
+
+  find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
+  ASSERT_EQ(1, a_begin); // eTwenty
+  ASSERT_EQ(3, a_end);
+  ASSERT_EQ(4, b_begin);
+  ASSERT_EQ(6, b_end);
+  clear_alignment_and_update(scoring, a, b, a_begin, a_end, b_begin, b_end, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+  //  a  c  c  c  b  b
+      3, 0, 0, 0, 0, 0, // a
+      0, 0, 0, 0, 0, 0, // b
+      0, 0, 0, 0, 0, 0, // b
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // c
+      0, 0, 0, 0, 0, 0, // d
+      0, 0, 0, 0, 0, 0, // d
+      0, 0, 0, 0, 0, 0, // b
+      }));
+}
