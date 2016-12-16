@@ -19,6 +19,6 @@ if (BUILD_TESTS)
   # Property tests
   add_subdirectory("rapidcheck")
   add_executable(property_tests property_tests.cpp)
-  target_link_libraries(property_tests rapidcheck)
+  target_link_libraries(property_tests rapidcheck test_utils)
 
 endif (BUILD_TESTS)
