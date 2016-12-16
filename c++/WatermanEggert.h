@@ -10,6 +10,24 @@ struct Scoring {
          space_value;
 };
 
+template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a, const V &b,
+  size_t m, size_t n, size_t a_begin, size_t b_begin,
+  const std::vector<long> &matrix, size_t i, size_t j) {
+
+  long upper = i == a_begin ? 0 : matrix[(i-1) * n + j],
+       left  = j == b_begin ? 0 : matrix[i * n + (j-1)],
+       upper_left = (i == a_begin || j == b_begin) ? 0 : matrix[(i-1) * n + (j-1)];
+
+  long match_mistmatch_value = a[i] == b[j] ? scoring.match_value : scoring.mismatch_value;
+
+  return std::max({
+      0L,
+      upper_left + match_mistmatch_value,
+      left + scoring.space_value,
+      upper + scoring.space_value
+  });
+}
+
 // Fill a sub-matrix a_begin to a_end, b_begin to b_end (half-open ranges)
 template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
   size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
@@ -20,36 +38,9 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b,
     return;
   }
 
-  // fill upper-left corner
-  matrix[a_begin * n + b_begin] = std::max(
-    a[a_begin] == b[b_begin] ? scoring.match_value : scoring.mismatch_value,
-    0L
-  );
-
-  // fill upper row
-  for (size_t j = b_begin + 1; j < b_end; j++) {
-    matrix[a_begin * n + j] = std::max({
-      matrix[j-1] + scoring.space_value,
-      a[a_begin] == b[j] ? scoring.match_value : scoring.mismatch_value,
-      0L});
-  }
-  // fill leftmost column
-  for (size_t i = a_begin + 1; i < a_end; i++) {
-    matrix[i * n + b_begin] = std::max({
-      matrix[(i-1) * n] + scoring.space_value,
-      a[i] == b[b_begin] ? scoring.match_value : scoring.mismatch_value,
-      0L
-    });
-  }
-  // fill the rest of the matrix
-  for (size_t i = a_begin + 1; i < a_end; i++) {
-  for (size_t j = b_begin + 1; j < b_end; j++) {
-    matrix[i * n + j] = std::max({
-      0L,
-      matrix[(i-1) * n + (j-1)] + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value),
-      matrix[(i-1) * n + j] + scoring.space_value,
-      matrix[i * n + (j - 1)] + scoring.space_value
-      });
+  for (size_t i = a_begin; i < a_end; i++) {
+  for (size_t j = b_begin; j < b_end; j++) {
+    matrix[i * n + j] = compute_matrix_elt(scoring, a, b, m, n, a_begin, b_begin, matrix, i, j);
   }}
 }
 
