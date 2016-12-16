@@ -4,39 +4,38 @@
 #include <vector>
 #include <cstddef>
 #include <iterator>
+#include <memory>
 
 class Matrix {
   private:
-    std::vector<long> matrix; // row-major
+    std::shared_ptr<std::vector<long>> matrix; // row-major
   public:
-    size_t m, n; // rows, columns
-    Matrix(size_t m, size_t n) :
-      m (m), n (n), matrix(std::vector<long>(m*n)) {}
-    Matrix(size_t m, size_t n, long x) :
-      m (m), n (n), matrix(std::vector<long>(m*n, x)) {}
+    const size_t rows, cols;
+    const size_t row_begin, row_end, col_begin, col_end;
+    Matrix(size_t rows, size_t cols) : rows (rows), cols (cols), row_begin (0), col_begin (0), row_end (rows), col_end (cols) {
+      matrix = std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols));
+    }
+    Matrix(size_t rows, size_t cols, long x)
+      : rows (rows), cols (cols), row_begin (0), col_begin (0), row_end (rows), col_end (cols) {
+      matrix = std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols, x));
+    }
+    Matrix(size_t rows, size_t cols, size_t row_begin, size_t row_end, size_t col_begin, size_t col_end)
+      : rows (rows), cols (cols), row_begin (row_begin), col_begin (col_begin), row_end (row_end), col_end (col_end) {
+      matrix = std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols));
+    }
+    Matrix(size_t rows, size_t cols, size_t row_begin, size_t row_end, size_t col_begin, size_t col_end, long x)
+      : rows (rows), cols (cols), row_begin (row_begin), col_begin (col_begin), row_end (row_end), col_end (col_end) {
+      matrix = std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols, x));
+    }
     long operator()(size_t i, size_t j) const {
-      return matrix[i * n + j];
+      return (*matrix)[i * cols + j];
     }
     long& operator()(size_t i, size_t j) {
-      return matrix[i * n + j];
+      return (*matrix)[i * cols + j];
     }
     const std::vector<long>& elements() {
-      return matrix;
+      return *matrix;
     }
-};
-
-class Cell : public Matrix {
-  public:
-    size_t a_begin, a_end, b_begin, b_end;
-
-    Cell(size_t m, size_t n) :
-      Matrix(m, n), a_begin (0), b_begin (0), a_end (m), b_end (n) {};
-
-    Cell(Matrix mx) :
-      Matrix(mx), a_begin (0), b_begin (0), a_end (mx.m), b_end (mx.n) {};
-
-    Cell(Matrix mx, size_t a_begin, size_t a_end, size_t b_begin, size_t b_end) :
-      Matrix(mx), a_begin(a_begin), a_end(a_end), b_begin(b_begin), b_end(b_end) {};
 };
 
 #endif
