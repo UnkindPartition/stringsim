@@ -101,6 +101,27 @@ template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b
   }
 }
 
+// Take a matrix and the alignment coordinates. Clear the matrix entries
+// associated with the aligned fragments.
+static void clear_alignment(size_t m, size_t n, size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
+  std::vector<long> &matrix) {
+  // first, clear the horizontal strip from a_begin to a_end
+  for (size_t i = a_begin; i < a_end; i++) {
+  for (size_t j = 0; j < n ; j++) {
+    matrix[i * n + j] = 0;
+  }}
+  // clear the top part of the vertical strip
+  for (size_t i = 0; i < a_begin; i++) {
+  for (size_t j = b_begin; j < b_end ; j++) {
+    matrix[i * n + j] = 0;
+  }}
+  // clear the bottom part of the vertical strip
+  for (size_t i = a_end; i < m; i++) {
+  for (size_t j = b_begin; j < b_end ; j++) {
+    matrix[i * n + j] = 0;
+  }}
+}
+
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns

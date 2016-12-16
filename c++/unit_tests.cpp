@@ -106,3 +106,51 @@ TEST(fill_matrix, case_restricted_edge_cases) {
       0, 0, 0, 3, 3
       }));
 }
+TEST(clear_alignment, case_middle) {
+  const int m = 5, n = 4;
+  vector<long> matrix(m*n, 1);
+  clear_alignment(m, n, 2, 4, 1, 3, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+      1, 0, 0, 1,
+      1, 0, 0, 1,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      1, 0, 0, 1,
+      }));
+}
+TEST(clear_alignment, case_top_left) {
+  const int m = 5, n = 4;
+  vector<long> matrix(m*n, 1);
+  clear_alignment(m, n, 0, 2, 0, 1, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 1, 1, 1,
+      0, 1, 1, 1,
+      0, 1, 1, 1,
+      }));
+}
+TEST(clear_alignment, case_bottom_right) {
+  const int m = 5, n = 4;
+  vector<long> matrix(m*n, 1);
+  clear_alignment(m, n, 2, 5, 2, 4, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+      1, 1, 0, 0,
+      1, 1, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      }));
+}
+TEST(clear_alignment, case_all) {
+  const int m = 5, n = 4;
+  vector<long> matrix(m*n, 1);
+  clear_alignment(m, n, 0, 5, 0, 4, matrix);
+  ASSERT_THAT(matrix, ElementsAreArray({
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      }));
+}
