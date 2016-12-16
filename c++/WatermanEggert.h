@@ -156,6 +156,14 @@ template<typename V> void update_matrix_all(Scoring scoring, const V &a, const V
   update_matrix(scoring, a, b, a_end, m, b_end, n, matrix);
 }
 
+template<typename V> void clear_alignment_and_update(Scoring scoring, const V &a, const V &b,
+  size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
+  std::vector<long> &matrix) {
+
+  clear_alignment(a.size(), b.size(), a_begin, a_end, b_begin, b_end, matrix);
+  update_matrix_all(scoring, a, b, a_begin, a_end, b_begin, b_end, matrix);
+}
+
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
