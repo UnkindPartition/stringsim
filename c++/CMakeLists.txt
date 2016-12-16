@@ -15,6 +15,7 @@ if (BUILD_TESTS)
   include_directories(${GTest_INCLUDE_DIRS})
   target_link_libraries (unit_tests ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} test_utils)
   add_test(unit_tests ./unit_tests)
+  add_test(property_tests ./property_tests)
 
   # Property tests
   add_subdirectory("rapidcheck")
