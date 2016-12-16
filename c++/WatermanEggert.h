@@ -68,6 +68,10 @@ template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b
 
   const size_t m = a.size(), // rows
                n = b.size(); // columns
+  if (m == 0 || n == 0) {
+    a_begin = a_end = b_begin = b_end = 0;
+    return;
+  }
 
   std::vector<long>::const_iterator end = std::max_element(matrix.begin(), matrix.end());
 
@@ -81,7 +85,7 @@ template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b
   long this_value;
 
   // traceback
-  while ((i > 0 || j > 0) && (this_value = matrix[i*n+j]) > 0) {
+  while ((this_value = matrix[i*n+j]) > 0) {
     a_begin = i;
     b_begin = j;
 

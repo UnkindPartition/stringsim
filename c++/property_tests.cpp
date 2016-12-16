@@ -31,7 +31,30 @@ int main() {
       }
       }
       RC_TAG(any ? "not all zero" : "all zero");
+    });
 
+  check("find_alignment properties",
+    []() {
+      const auto a = aString(), b = aString();
+      size_t a_begin, a_end, b_begin, b_end;
+      vector<long> matrix = alloc_fill_matrix(a, b);
+      find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
+
+      // Property: if all entries are zero, the alignment is empty
+      if(none_of(matrix.begin(), matrix.end(), [](long x){return x;})) {
+        RC_TAG("all zero");
+        RC_ASSERT(a_begin == a_end);
+        RC_ASSERT(b_begin == b_end);
+        // for the other properties, we assume that there are non-zero entries
+        // Thus, return.
+        return;
+      }
+      RC_TAG("not all zero");
+      // cout << a_begin << " " << a_end << " " << b_begin << " " << b_end << endl;
+      RC_ASSERT(a_begin < a_end && b_begin < b_end); // alignment should be non-empty
+
+      // alignment should end on a maximum value
+      RC_ASSERT(matrix[(a_end-1) * b.size() + (b_end-1)] == *max_element(matrix.begin(), matrix.end()));
     });
 
   return 0;
