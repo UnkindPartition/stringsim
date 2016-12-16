@@ -131,7 +131,7 @@ template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
     for (size_t j = b_begin; j < b_end; j++) {
       long newval = compute_matrix_elt(scoring, a, b, m, n, a_begin, b_begin, matrix, i, j);
       if (newval != matrix[i*n + j]) {
-        newval = matrix[i*n + j];
+        matrix[i*n + j] = newval;
         last_updated_col_this = j;
       }
     }
