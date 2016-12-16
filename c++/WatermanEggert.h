@@ -113,6 +113,31 @@ static void clear_alignment(size_t m, size_t n, size_t a_begin, size_t a_end, si
   }}
 }
 
+// Update a part of the matrix after the alignment is cleared
+template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
+  size_t a_begin, size_t a_end, size_t b_begin, size_t b_end,
+  std::vector<long> matrix) {
+
+  const size_t m = a.size(), // rows
+               n = b.size(); // columns
+
+  ssize_t last_updated_col_this = -1, last_updated_col_prev;
+
+  for (size_t i = a_begin; i < a_end; i++) {
+
+    last_updated_col_prev = last_updated_col_this;
+    last_updated_col_this = -1;
+
+    for (size_t j = b_begin; j < b_end; j++) {
+      long newval = compute_matrix_elt(scoring, a, b, m, n, a_begin, b_begin, matrix, i, j);
+      if (newval != matrix[i*n + j]) {
+        newval = matrix[i*n + j];
+        last_updated_col_this = j;
+      }
+    }
+  }
+}
+
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   const size_t m = a.size(), // rows
                n = b.size(); // columns
