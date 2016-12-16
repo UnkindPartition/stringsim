@@ -1,6 +1,6 @@
 #ifndef WE_TEST_UTILS_H
 #define WE_TEST_UTILS_H
-#include "WatermanEggert.h"
+#include "WatermanEggert/WatermanEggert.h"
 #include <string>
 extern const Scoring scoring;
 std::vector<long> alloc_fill_matrix(std::string a, std::string b);

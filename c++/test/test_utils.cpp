@@ -1,4 +1,4 @@
-#include "WatermanEggert.h"
+#include "WatermanEggert/WatermanEggert.h"
 #include "test_utils.h"
 
 using namespace std;

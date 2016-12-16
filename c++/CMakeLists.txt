@@ -5,13 +5,14 @@ enable_testing()
 option(BUILD_TESTS "Build the tests" ON)
 
 add_library(WatermanEggert INTERFACE)
+include_directories(include)
 
 if (BUILD_TESTS)
-  add_library(test_utils test_utils.cpp)
+  add_library(test_utils test/test_utils.cpp)
 
   # Unit tests
   find_package(GTest REQUIRED)
-  add_executable(unit_tests unit_tests.cpp)
+  add_executable(unit_tests test/unit_tests.cpp)
   include_directories(${GTest_INCLUDE_DIRS})
   target_link_libraries (unit_tests ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} test_utils)
   add_test(unit_tests ./unit_tests)
@@ -19,7 +20,7 @@ if (BUILD_TESTS)
 
   # Property tests
   add_subdirectory("rapidcheck")
-  add_executable(property_tests property_tests.cpp)
+  add_executable(property_tests test/property_tests.cpp)
   target_link_libraries(property_tests rapidcheck test_utils)
 
 endif (BUILD_TESTS)

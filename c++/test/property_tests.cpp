@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include "WatermanEggert.h"
+#include "WatermanEggert/WatermanEggert.h"
 #include "test_utils.h"
 
 using namespace std;
