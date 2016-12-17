@@ -14,20 +14,20 @@ int main() {
   check("fill_matrix is properly restricted",
     []() {
       const auto a = aString(), b = aString();
-      const size_t a_begin = *gen::resize(kNominalSize, gen::inRange(0UL, a.size()+1)),
-                   a_end   = *gen::resize(kNominalSize, gen::inRange(a_begin, a.size()+1)),
-                   b_begin = *gen::resize(kNominalSize, gen::inRange(0UL, b.size()+1)),
-                   b_end   = *gen::resize(kNominalSize, gen::inRange(b_begin, b.size()+1));
-      vector<long> matrix = alloc_fill_matrix(a, b, a_begin, a_end, b_begin, b_end);
+      const size_t row_begin = *gen::resize(kNominalSize, gen::inRange(0UL, a.size()+1)),
+                   row_end   = *gen::resize(kNominalSize, gen::inRange(row_begin, a.size()+1)),
+                   col_begin = *gen::resize(kNominalSize, gen::inRange(0UL, b.size()+1)),
+                   col_end   = *gen::resize(kNominalSize, gen::inRange(col_begin, b.size()+1));
+      Matrix matrix = alloc_fill_matrix(a, b, row_begin, row_end, col_begin, col_end);
 
       bool any = false;
       for (size_t i = 0; i < a.size(); i++) {
       for (size_t j = 0; j < b.size(); j++) {
         RC_ASSERT(
-          (i >= a_begin && i < a_end && j >= b_begin && j < b_end) ||
-          (matrix[i * b.size() + j] == 0)
+          (i >= row_begin && i < row_end && j >= col_begin && j < col_end) ||
+          (matrix(i,j) == 0)
         );
-        any = any || matrix[i * b.size() + j];
+        any = any || matrix(i,j);
       }
       }
       RC_TAG(any ? "not all zero" : "all zero");
@@ -36,25 +36,26 @@ int main() {
   check("find_alignment properties",
     []() {
       const auto a = aString(), b = aString();
-      size_t a_begin, a_end, b_begin, b_end;
-      vector<long> matrix = alloc_fill_matrix(a, b);
-      find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
+      Matrix matrix = alloc_fill_matrix(a, b);
+      Matrix alignment = find_alignment(scoring, a, b, matrix);
 
       // Property: if all entries are zero, the alignment is empty
-      if(none_of(matrix.begin(), matrix.end(), [](long x){return x;})) {
+      if(matrix.all_le(0)) {
         RC_TAG("all zero");
-        RC_ASSERT(a_begin == a_end);
-        RC_ASSERT(b_begin == b_end);
+        RC_ASSERT(alignment.row_begin == alignment.row_end);
+        RC_ASSERT(alignment.col_begin == alignment.col_end);
         // for the other properties, we assume that there are non-zero entries
         // Thus, return.
         return;
       }
       RC_TAG("not all zero");
-      // cout << a_begin << " " << a_end << " " << b_begin << " " << b_end << endl;
-      RC_ASSERT(a_begin < a_end && b_begin < b_end); // alignment should be non-empty
+      // cout << alignment.row_begin << " " << alignment.row_end << " " << alignment.col_begin << " " << alignment.col_end << endl;
+      RC_ASSERT(!alignment.empty());
 
       // alignment should end on a maximum value
-      RC_ASSERT(matrix[(a_end-1) * b.size() + (b_end-1)] == *max_element(matrix.begin(), matrix.end()));
+      auto elements = matrix.elements();
+      RC_ASSERT(matrix(alignment.row_end-1,alignment.col_end-1) ==
+        *max_element(elements.begin(), elements.end()));
     });
 
   return 0;
