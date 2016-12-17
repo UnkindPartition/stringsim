@@ -7,8 +7,8 @@
 
 struct Scoring {
   long match_value,
-         mismatch_value,
-         space_value;
+       mismatch_value,
+       space_value;
 };
 
 template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a, const V &b,
