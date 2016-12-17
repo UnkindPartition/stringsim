@@ -3,11 +3,7 @@
 
 using namespace std;
 
-const Scoring scoring = {
-  .match_value = 3,
-  .mismatch_value = -2,
-  .space_value = -5
-};
+const Scoring scoring = { 3, -2, -5 };
 
 Matrix alloc_fill_matrix(string a, string b) {
   Matrix matrix(a.size(), b.size());
