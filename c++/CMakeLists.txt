@@ -7,6 +7,8 @@ option(BUILD_TESTS "Build the tests" ON)
 add_library(WatermanEggert INTERFACE)
 include_directories(include)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
+
 if (BUILD_TESTS)
   add_library(test_utils test/test_utils.cpp)
 
