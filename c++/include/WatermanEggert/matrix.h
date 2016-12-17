@@ -58,7 +58,7 @@ class Matrix {
     }
     // Returns the coordinates of the maximum element within the submatrix.
     // Relies on the fact that the matrix is non-negative.
-    std::pair<size_t,size_t> max_element() {
+    std::pair<size_t,size_t> max_element() const {
       size_t max_i = 0, max_j = 0, max_val = 0;
       for (size_t i = row_begin; i < row_end; i++) {
       for (size_t j = col_begin; j < col_end; j++) {

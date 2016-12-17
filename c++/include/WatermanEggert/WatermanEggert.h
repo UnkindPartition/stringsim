@@ -40,13 +40,13 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, M
 }
 
 template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V &b, const Matrix &matrix) {
-  if (matrix.empty) {
+  if (matrix.empty()) {
     return Matrix(matrix, 0, 0, 0, 0);
   }
   size_t row_begin, row_end, col_begin, col_end;
 
   size_t i, j;
-  std::tie(i,j) = matrix.
+  std::tie(i,j) = matrix.max_element();
 
   row_begin = row_end = i + 1;
   col_begin = col_end = j + 1;
