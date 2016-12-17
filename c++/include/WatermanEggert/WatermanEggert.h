@@ -129,45 +129,9 @@ template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
   }
 }
 
-// Update the whole matrix after the alignment is cleared. Unlike in
-// update_matrix_all, here row_begin etc. refer to the alignment, not the
-// submatrix to be updated!
-template<typename V> void update_matrix_all(Scoring scoring, const V &a, const V &b,
-  size_t row_begin, size_t row_end, size_t col_begin, size_t col_end,
-  std::vector<long> &matrix) {
-
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-
-  // update upper-right corner
-  update_matrix(scoring, a, b, 0, row_begin, col_end, n, matrix);
-  // update lower-left corner
-  update_matrix(scoring, a, b, row_end, m, 0, col_begin, matrix);
-  // update lower-right corner
-  update_matrix(scoring, a, b, row_end, m, col_end, n, matrix);
-}
-
-template<typename V> void clear_alignment_and_update(Scoring scoring, const V &a, const V &b,
-  size_t row_begin, size_t row_end, size_t col_begin, size_t col_end,
-  std::vector<long> &matrix) {
-
-  clear_alignment(a.size(), b.size(), row_begin, row_end, col_begin, col_end, matrix);
-  update_matrix_all(scoring, a, b, row_begin, row_end, col_begin, col_end, matrix);
-}
-
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-
-  if (m == 0 || n == 0) {
-    return 0;
-  }
-
-  std::vector<long> matrix(m * n); // row-major
-
-  fill_matrix(scoring, a, b, matrix);
-
-  return *(std::max_element(matrix.begin(), matrix.end()));
+  // TODO
+  return 0;
 }
 
 #endif // WATERMAN_EGGERT_H
