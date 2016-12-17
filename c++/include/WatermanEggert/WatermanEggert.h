@@ -68,6 +68,7 @@ template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V 
       break; // e.g. we are at (0,3), and this is the beginning
     }
   }
+  return Matrix(matrix, row_begin, row_end, col_begin, col_end);
 }
 
 // A helper function. Pushed a matrix into a vector unless the matrix is empty.
