@@ -28,7 +28,6 @@ template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a,
   });
 }
 
-// Fill a sub-matrix row_begin to row_end, col_begin to col_end (half-open ranges)
 template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, Matrix &matrix) {
   if (matrix.row_begin >= matrix.row_end || matrix.col_begin >= matrix.col_end) {
     return;
@@ -40,23 +39,14 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, M
   }}
 }
 
-// row_start and row_end are *half-open* ends of the aligned subsequence
-template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b,
-  const std::vector<long> &matrix,
-  size_t &row_begin, size_t &row_end, size_t &col_begin, size_t &col_end) {
-
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-  if (m == 0 || n == 0) {
-    row_begin = row_end = col_begin = col_end = 0;
-    return;
+template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V &b, const Matrix &matrix) {
+  if (matrix.empty) {
+    return Matrix(matrix, 0, 0, 0, 0);
   }
+  size_t row_begin, row_end, col_begin, col_end;
 
-  std::vector<long>::const_iterator end = std::max_element(matrix.begin(), matrix.end());
-
-  size_t
-    i = (end - matrix.begin()) / n,
-    j = (end - matrix.begin()) % n;
+  size_t i, j;
+  std::tie(i,j) = matrix.
 
   row_begin = row_end = i + 1;
   col_begin = col_end = j + 1;
@@ -64,15 +54,15 @@ template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b
   long this_value;
 
   // traceback
-  while ((this_value = matrix[i*n+j]) > 0) {
+  while ((this_value = matrix(i,j)) > 0) {
     row_begin = i;
     col_begin = j;
 
-    if (i > 0 && j > 0 && this_value == matrix[(i-1) * n + (j-1)] + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value)) {
+    if (i > 0 && j > 0 && this_value == matrix(i-1,j-1) + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value)) {
       i--; j--;
-    } else if (i > 0 && this_value == matrix[(i-1) * n + j] + scoring.space_value) {
+    } else if (i > 0 && this_value == matrix(i-1,j) + scoring.space_value) {
       i--;
-    } else if (j > 0 && this_value == matrix[i * n + (j - 1)] + scoring.space_value) {
+    } else if (j > 0 && this_value == matrix(i,j-1) + scoring.space_value) {
       j--;
     } else {
       break; // e.g. we are at (0,3), and this is the beginning
@@ -80,46 +70,21 @@ template<typename V> void find_alignment(Scoring scoring, const V &a, const V &b
   }
 }
 
-// Take a matrix and the alignment coordinates. Clear the matrix entries
-// associated with the aligned fragments.
-static void clear_alignment(size_t m, size_t n, size_t row_begin, size_t row_end, size_t col_begin, size_t col_end,
-  std::vector<long> &matrix) {
-  // first, clear the horizontal strip from row_begin to row_end
-  for (size_t i = row_begin; i < row_end; i++) {
-  for (size_t j = 0; j < n ; j++) {
-    matrix[i * n + j] = 0;
-  }}
-  // clear the top part of the vertical strip
-  for (size_t i = 0; i < row_begin; i++) {
-  for (size_t j = col_begin; j < col_end ; j++) {
-    matrix[i * n + j] = 0;
-  }}
-  // clear the bottom part of the vertical strip
-  for (size_t i = row_end; i < m; i++) {
-  for (size_t j = col_begin; j < col_end ; j++) {
-    matrix[i * n + j] = 0;
-  }}
-}
 
-// Update a part of the matrix after the alignment is cleared
-template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
-  size_t row_begin, size_t row_end, size_t col_begin, size_t col_end,
-  std::vector<long> &matrix) {
 
-  const size_t m = a.size(), // rows
-               n = b.size(); // columns
-
+// Update a recently cut off part of the matrix
+template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b, Matrix &matrix) {
   ssize_t last_updated_col_this = -1, last_updated_col_prev;
 
-  for (size_t i = row_begin; i < row_end; i++) {
+  for (size_t i = matrix.row_begin; i < matrix.row_end; i++) {
 
     last_updated_col_prev = last_updated_col_this;
     last_updated_col_this = -1;
 
-    for (size_t j = col_begin; j < col_end; j++) {
-      long newval = compute_matrix_elt(scoring, a, b, m, n, row_begin, col_begin, matrix, i, j);
-      if (newval != matrix[i*n + j]) {
-        matrix[i*n + j] = newval;
+    for (size_t j = matrix.col_begin; j < matrix.col_end; j++) {
+      long newval = compute_matrix_elt(scoring, a, b, matrix, i, j);
+      if (newval != matrix(i,j)) {
+        matrix(i, j) = newval;
         last_updated_col_this = j;
       }
     }
