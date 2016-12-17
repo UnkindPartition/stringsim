@@ -70,7 +70,44 @@ template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V 
   }
 }
 
+// A helper function. Pushed a matrix into a vector unless the matrix is empty.
+inline void push_if_not_empty(std::vector<Matrix> &vec, const Matrix &mx) {
+  if (!mx.empty()) {
+    vec.push_back(mx);
+  }
+}
 
+// Given a vector of matrices and a local alignment, return:
+//
+// 1. The vector of matrices that don't intersect the alignment
+// 2. The vector of matrices that intercepted the alignment, but split into
+//    smaller matrices that do not.
+inline std::pair<std::vector<Matrix>,std::vector<Matrix>> remove_alignment(
+  std::vector<Matrix> matrices, Matrix alignment) {
+
+  std::vector<Matrix> unaffected, affected;
+
+  for (Matrix mx : matrices) {
+    bool rows_intersect = !(mx.row_end <= alignment.row_begin || alignment.row_end <= mx.row_begin),
+         cols_intersect = !(mx.col_end <= alignment.col_begin || alignment.col_end <= mx.col_begin);
+    if (rows_intersect && cols_intersect) {
+      push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, mx.col_begin, alignment.col_begin));
+      push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, alignment.col_end, mx.col_end));
+      push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, mx.col_begin, alignment.col_begin));
+      push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, alignment.col_end, mx.col_end));
+    } else if (rows_intersect) {
+      push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, mx.col_begin, mx.col_end));
+      push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, mx.col_begin, mx.col_end));
+
+    } else if (cols_intersect) {
+      push_if_not_empty(affected, Matrix(mx, mx.row_begin, mx.row_end, mx.col_begin, alignment.col_begin));
+      push_if_not_empty(affected, Matrix(mx, mx.row_begin, mx.row_end, alignment.col_end, mx.col_end));
+    } else {
+      unaffected.push_back(mx);
+    }
+  }
+  return std::pair<std::vector<Matrix>,std::vector<Matrix>>(unaffected, affected);
+}
 
 // Update a recently cut off part of the matrix
 template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b, Matrix &matrix) {
