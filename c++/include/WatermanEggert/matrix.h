@@ -65,6 +65,7 @@ class Matrix {
         if (operator()(i,j) > max_val) {
           max_i = i;
           max_j = j;
+          max_val = operator()(i,j);
         }
       }}
       return std::pair<size_t,size_t>(max_i,max_j);
