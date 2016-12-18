@@ -13,10 +13,9 @@ if (BUILD_TESTS)
   add_library(test_utils test/test_utils.cpp)
 
   # Unit tests
-  find_package(GTest REQUIRED)
+  add_subdirectory("googletest")
   add_executable(unit_tests test/unit_tests.cpp)
-  include_directories(${GTest_INCLUDE_DIRS})
-  target_link_libraries (unit_tests ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} test_utils)
+  target_link_libraries (unit_tests gmock gtest gtest_main test_utils)
   add_test(unit_tests ./unit_tests)
   add_test(property_tests ./property_tests)
 

@@ -2,3 +2,7 @@
 	path = c++/rapidcheck
 	url = git@github.com:emil-e/rapidcheck.git
   ignore = dirty
+[submodule "c++/googletest"]
+	path = c++/googletest
+	url = https://github.com/google/googletest
+  ignore = dirty
