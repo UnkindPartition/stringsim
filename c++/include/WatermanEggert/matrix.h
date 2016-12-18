@@ -54,7 +54,7 @@ class Matrix {
     }
     bool operator==(const Matrix &other) const {
       return
-        matrix     ==  other.matrix     &&
+        *matrix    ==  *(other.matrix)  &&
         rows       ==  other.rows       &&
         cols       ==  other.cols       &&
         row_begin  ==  other.row_begin  &&
@@ -62,7 +62,19 @@ class Matrix {
         col_begin  ==  other.col_begin  &&
         col_end    ==  other.col_end    ;
     }
-    const std::vector<long>& elements() const {
+    // Allocate and return a vector with elements of the matrix view.
+    // Intended for testing only.
+    std::vector<long> elements() const {
+      std::vector<long> result;
+      for (size_t i = row_begin; i < row_end; i++) {
+      for (size_t j = col_begin; j < col_end; j++) {
+        result.push_back(operator()(i,j));
+      }}
+      return result;
+    }
+    // Return *all* elements (not just in the view).
+    // Intended for testing only.
+    const std::vector<long>& all_elements() const {
       return *matrix;
     }
     // Returns the coordinates of the maximum element within the submatrix.
