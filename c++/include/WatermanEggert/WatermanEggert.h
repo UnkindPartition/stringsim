@@ -88,7 +88,7 @@ inline std::pair<std::vector<Matrix>,std::vector<Matrix>> remove_alignment(
 
   std::vector<Matrix> unaffected, affected;
 
-  for (Matrix mx : matrices) {
+  for (const Matrix &mx : matrices) {
     bool rows_intersect = !(mx.row_end <= alignment.row_begin || alignment.row_end <= mx.row_begin),
          cols_intersect = !(mx.col_end <= alignment.col_begin || alignment.col_end <= mx.col_begin);
     if (rows_intersect && cols_intersect) {
