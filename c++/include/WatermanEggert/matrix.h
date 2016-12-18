@@ -12,9 +12,10 @@ class Matrix {
     const size_t rows, cols;
   public:
     const size_t row_begin, row_end, col_begin, col_end;
-    Matrix(size_t rows, size_t cols) : rows (rows), cols (cols), row_begin (0), row_end (rows), col_begin (0), col_end (cols) {
-      matrix = std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols));
-    }
+    Matrix(size_t rows, size_t cols)
+      : matrix(std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols))),
+        rows (rows), cols (cols), row_begin (0), row_end (rows), col_begin (0), col_end (cols)
+    {}
     Matrix(size_t rows, size_t cols, long x)
       : matrix (std::shared_ptr<std::vector<long>>(new std::vector<long>(rows * cols, x))),
         rows (rows), cols (cols), row_begin (0), row_end (rows), col_begin (0), col_end (cols)
