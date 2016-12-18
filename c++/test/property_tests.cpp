@@ -58,5 +58,31 @@ int main() {
         *max_element(elements.begin(), elements.end()));
     });
 
+  check("remove_alignment",
+    []() {
+      const auto a = aString(), b = aString();
+      Matrix matrix = alloc_fill_matrix(a, b);
+      Matrix alignment = find_alignment(scoring, a, b, matrix);
+      vector<Matrix> unaffected, affected, affected2;
+      tie(unaffected, affected) = remove_alignment({matrix}, alignment);
+      RC_TAG(affected.size());
+      // try to remove the same alignment the second time
+      tie(ignore, affected2) = remove_alignment(affected, alignment);
+      RC_ASSERT(affected2.empty());
+      // check that the sizes add up
+      size_t total_size = 0;
+      for (Matrix mx : affected) {
+        total_size += (mx.row_end - mx.row_begin) * (mx.col_end - mx.col_begin);
+      }
+      for (Matrix mx : unaffected) {
+        total_size += (mx.row_end - mx.row_begin) * (mx.col_end - mx.col_begin);
+      }
+      total_size +=
+        (alignment.row_end - alignment.row_begin) * b.size() +
+        (alignment.col_end - alignment.col_begin) * a.size() -
+        (alignment.row_end - alignment.row_begin) * (alignment.col_end - alignment.col_begin);
+      RC_ASSERT(total_size == matrix.elements().size());
+    });
+
   return 0;
 }
