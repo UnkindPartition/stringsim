@@ -129,6 +129,16 @@ template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
   }
 }
 
+// Find the best alignment in a set of computed matrices
+template<typename V> Matrix choose_alignment(Scoring scoring, const V &a, const V &b, const std::vector<Matrix> &matrices) {
+  std::vector<long> scores(matrices.size());
+  for (size_t i = 0; i < matrices.size(); i++) {
+    scores[i] = matrices[i].max_value();
+  }
+  const Matrix &best_matrix = *(matrices.begin() + (std::max_element(scores.begin(), scores.end()) - scores.begin()));
+  return find_alignment(scoring, a, b, best_matrix);
+}
+
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   // TODO
   return 0;

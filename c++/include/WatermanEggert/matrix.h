@@ -70,6 +70,16 @@ class Matrix {
       }}
       return std::pair<size_t,size_t>(max_i,max_j);
     }
+    long max_value() const {
+      long max_val = 0;
+      for (size_t i = row_begin; i < row_end; i++) {
+      for (size_t j = col_begin; j < col_end; j++) {
+        if (operator()(i,j) > max_val) {
+          max_val = operator()(i,j);
+        }
+      }}
+      return max_val;
+    }
 };
 
 #endif
