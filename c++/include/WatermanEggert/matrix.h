@@ -52,6 +52,16 @@ class Matrix {
     long& operator()(size_t i, size_t j) {
       return (*matrix)[i * cols + j];
     }
+    bool operator==(const Matrix &other) const {
+      return
+        matrix     ==  other.matrix     &&
+        rows       ==  other.rows       &&
+        cols       ==  other.cols       &&
+        row_begin  ==  other.row_begin  &&
+        row_end    ==  other.row_end    &&
+        col_begin  ==  other.col_begin  &&
+        col_end    ==  other.col_end    ;
+    }
     const std::vector<long>& elements() const {
       return *matrix;
     }

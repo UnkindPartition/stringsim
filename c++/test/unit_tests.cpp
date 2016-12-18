@@ -106,60 +106,11 @@ TEST(fill_matrix, case_restricted_edge_cases) {
       0, 0, 0, 3, 3
       }));
 }
-TEST(clear_alignment, case_middle) {
-  const int m = 5, n = 4;
-  vector<long> matrix(m*n, 1);
-  clear_alignment(m, n, 2, 4, 1, 3, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
-      1, 0, 0, 1,
-      1, 0, 0, 1,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      1, 0, 0, 1,
-      }));
-}
-TEST(clear_alignment, case_top_left) {
-  const int m = 5, n = 4;
-  vector<long> matrix(m*n, 1);
-  clear_alignment(m, n, 0, 2, 0, 1, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 1, 1, 1,
-      0, 1, 1, 1,
-      0, 1, 1, 1,
-      }));
-}
-TEST(clear_alignment, case_bottom_right) {
-  const int m = 5, n = 4;
-  vector<long> matrix(m*n, 1);
-  clear_alignment(m, n, 2, 5, 2, 4, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
-      1, 1, 0, 0,
-      1, 1, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      }));
-}
-TEST(clear_alignment, case_all) {
-  const int m = 5, n = 4;
-  vector<long> matrix(m*n, 1);
-  clear_alignment(m, n, 0, 5, 0, 4, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      }));
-}
-TEST(clear_alignment_and_update, case1) {
+TEST(find_alignment_and_update, case1) {
   const string a = "abbcccddb",
                b = "acccbb";
   auto matrix = alloc_fill_matrix(a, b);
-  size_t a_begin, a_end, b_begin, b_end;
-  ASSERT_THAT(matrix, ElementsAreArray({
+  ASSERT_THAT(matrix.elements(), ElementsAreArray({
   //  a  c  c  c  b  b
       3, 0, 0, 0, 0, 0, // a
       0, 1, 0, 0, 3, 3, // b
@@ -172,41 +123,45 @@ TEST(clear_alignment_and_update, case1) {
       0, 0, 0, 0, 3, 5, // b
       }));
 
-  find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
-  ASSERT_EQ(3, a_begin); // eTwenty
-  ASSERT_EQ(6, a_end);
-  ASSERT_EQ(1, b_begin);
-  ASSERT_EQ(4, b_end);
-  clear_alignment_and_update(scoring, a, b, a_begin, a_end, b_begin, b_end, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
+  Matrix alignment = find_alignment(scoring, a, b, matrix);
+  ASSERT_EQ(Matrix(matrix, 3, 6, 1, 4), alignment);
+
+  vector<Matrix> affected, unaffected;
+  tie(unaffected, affected) = remove_alignment({matrix}, alignment);
+  ASSERT_TRUE(unaffected.empty());
+  ASSERT_THAT(affected, UnorderedElementsAreArray({
+    Matrix(matrix, 0, 3, 0, 1),
+    Matrix(matrix, 6, 9, 0, 1),
+    Matrix(matrix, 0, 3, 4, 6),
+    Matrix(matrix, 6, 9, 4, 6),
+    }));
+
+  vector<Matrix> matrices = affected;
+  for (Matrix &mx : matrices) {
+    update_matrix(scoring, a, b, mx);
+  }
+  ASSERT_THAT(matrix.elements(), ElementsAreArray({
   //  a  c  c  c  b  b
       3, 0, 0, 0, 0, 0, // a
-      0, 0, 0, 0, 3, 3, // b
+      0, 1, 0, 0, 3, 3, // b
       0, 0, 0, 0, 3, 6, // b
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // d
+      0, 3, 3, 3, 0, 1, // c
+      0, 3, 6, 6, 1, 0, // c
+      0, 3, 6, 9, 4, 0, // c
+      0, 0, 1, 4, 0, 0, // d
       0, 0, 0, 0, 0, 0, // d
       0, 0, 0, 0, 3, 3, // b
       }));
 
-  find_alignment(scoring, a, b, matrix, a_begin, a_end, b_begin, b_end);
-  ASSERT_EQ(1, a_begin); // eTwenty
-  ASSERT_EQ(3, a_end);
-  ASSERT_EQ(4, b_begin);
-  ASSERT_EQ(6, b_end);
-  clear_alignment_and_update(scoring, a, b, a_begin, a_end, b_begin, b_end, matrix);
-  ASSERT_THAT(matrix, ElementsAreArray({
-  //  a  c  c  c  b  b
-      3, 0, 0, 0, 0, 0, // a
-      0, 0, 0, 0, 0, 0, // b
-      0, 0, 0, 0, 0, 0, // b
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // c
-      0, 0, 0, 0, 0, 0, // d
-      0, 0, 0, 0, 0, 0, // d
-      0, 0, 0, 0, 0, 0, // b
-      }));
+  Matrix alignment2 = choose_alignment(scoring, a, b, matrices);
+  ASSERT_EQ(Matrix(matrix, 1, 3, 4, 6), alignment2);
+
+  vector<Matrix> affected2, unaffected2;
+  tie(unaffected2, affected2) = remove_alignment(matrices, alignment2);
+  ASSERT_THAT(unaffected2, UnorderedElementsAreArray({
+    Matrix(matrix, 6, 9, 0, 1)
+    }));
+  ASSERT_THAT(affected2, UnorderedElementsAreArray({
+    Matrix(matrix, 0, 1, 0, 1)
+    }));
 }
