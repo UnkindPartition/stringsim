@@ -54,7 +54,7 @@ class Matrix {
     }
     bool operator==(const Matrix &other) const {
       return
-        *matrix    ==  *(other.matrix)  &&
+        elements() ==  other.elements() &&
         rows       ==  other.rows       &&
         cols       ==  other.cols       &&
         row_begin  ==  other.row_begin  &&
