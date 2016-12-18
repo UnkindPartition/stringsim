@@ -33,6 +33,12 @@ class Matrix {
       : matrix (mx.matrix), rows (mx.rows), cols (mx.cols),
         row_begin (row_begin), row_end (row_end), col_begin (col_begin), col_end (col_end)
     {}
+    // Copy constructor
+    Matrix(const Matrix &mx)
+      : matrix(std::shared_ptr<std::vector<long>>(new std::vector<long>(*(mx.matrix)))),
+        rows (mx.rows), cols (mx.cols),
+        row_begin (mx.row_begin), row_end (mx.row_end), col_begin (mx.col_begin), col_end (mx.col_end)
+    {}
     // Is the view empty?
     bool empty() const {
       return (row_begin >= row_end || col_begin >= col_end);
