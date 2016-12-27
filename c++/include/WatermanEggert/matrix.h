@@ -39,6 +39,9 @@ class Matrix {
         rows (mx.rows), cols (mx.cols),
         row_begin (mx.row_begin), row_end (mx.row_end), col_begin (mx.col_begin), col_end (mx.col_end)
     {}
+    // Copy assignment is not supported (simply because I don't see a need for
+    // it so far...)
+    Matrix& operator=(const Matrix &rhs) = delete;
     ~Matrix() = default;
 
     // Is the view empty?

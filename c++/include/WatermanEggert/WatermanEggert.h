@@ -92,7 +92,8 @@ inline std::pair<std::vector<Matrix>,std::vector<Matrix>> remove_alignment(
     bool rows_intersect = !(mx.row_end <= alignment.row_begin || alignment.row_end <= mx.row_begin),
          cols_intersect = !(mx.col_end <= alignment.col_begin || alignment.col_end <= mx.col_begin);
     if (rows_intersect && cols_intersect) {
-      push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, mx.col_begin, alignment.col_begin));
+      // NB: the upper-left corner does not need updating!
+      push_if_not_empty(unaffected, Matrix(mx, mx.row_begin, alignment.row_begin, mx.col_begin, alignment.col_begin));
       push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, alignment.col_end, mx.col_end));
       push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, mx.col_begin, alignment.col_begin));
       push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, alignment.col_end, mx.col_end));

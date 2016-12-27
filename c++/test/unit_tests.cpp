@@ -128,9 +128,10 @@ TEST(find_alignment_and_update, case1) {
 
   vector<Matrix> affected, unaffected;
   tie(unaffected, affected) = remove_alignment({matrix}, alignment);
-  ASSERT_TRUE(unaffected.empty());
+  ASSERT_THAT(unaffected, UnorderedElementsAreArray({
+    Matrix(matrix, 0, 3, 0, 1)
+    }));
   ASSERT_THAT(affected, UnorderedElementsAreArray({
-    Matrix(matrix, 0, 3, 0, 1),
     Matrix(matrix, 6, 9, 0, 1),
     Matrix(matrix, 0, 3, 4, 6),
     Matrix(matrix, 6, 9, 4, 6),
