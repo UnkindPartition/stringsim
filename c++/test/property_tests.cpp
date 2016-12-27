@@ -84,5 +84,29 @@ int main() {
       RC_ASSERT(total_size == matrix.elements().size());
     });
 
+  check("update_matrix is equivalent to fill_matrix",
+    []() {
+      const auto a = aString(), b = aString();
+      Matrix matrix = alloc_fill_matrix(a, b);
+      Matrix alignment = find_alignment(scoring, a, b, matrix);
+      vector<Matrix> unaffected, affected, affected2;
+      tie(unaffected, affected) = remove_alignment({matrix}, alignment);
+
+      for (const Matrix &mx : unaffected) {
+        Matrix refilled = mx.duplicate();
+        fill_matrix(scoring, a, b, refilled);
+
+        RC_ASSERT(refilled == mx);
+      }
+      for (const Matrix &mx : affected) {
+        Matrix refilled = mx.duplicate();
+        Matrix updated = mx.duplicate();
+        fill_matrix(scoring, a, b, refilled);
+        update_matrix(scoring, a, b, updated);
+
+        RC_ASSERT(refilled == updated);
+      }
+    });
+
   return 0;
 }
