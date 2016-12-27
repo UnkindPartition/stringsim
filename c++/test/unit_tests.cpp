@@ -138,6 +138,7 @@ TEST(find_alignment_and_update, case1) {
     }));
 
   vector<Matrix> matrices = affected;
+  matrices.insert(matrices.end(), unaffected.begin(), unaffected.end());
   for (Matrix &mx : matrices) {
     update_matrix(scoring, a, b, mx);
   }
