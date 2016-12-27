@@ -35,7 +35,7 @@ class Matrix {
     {}
     // Copy constructor
     Matrix(const Matrix &mx)
-      : matrix(make_shared<std::vector<long>>(*(mx.matrix))),
+      : matrix(std::make_shared<std::vector<long>>(*(mx.matrix))),
         rows (mx.rows), cols (mx.cols),
         row_begin (mx.row_begin), row_end (mx.row_end), col_begin (mx.col_begin), col_end (mx.col_end)
     {}
