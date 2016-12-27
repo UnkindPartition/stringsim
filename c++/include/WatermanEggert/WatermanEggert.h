@@ -99,7 +99,6 @@ inline std::pair<std::vector<Matrix>,std::vector<Matrix>> remove_alignment(
     } else if (rows_intersect) {
       push_if_not_empty(affected, Matrix(mx, mx.row_begin, alignment.row_begin, mx.col_begin, mx.col_end));
       push_if_not_empty(affected, Matrix(mx, alignment.row_end, mx.row_end, mx.col_begin, mx.col_end));
-
     } else if (cols_intersect) {
       push_if_not_empty(affected, Matrix(mx, mx.row_begin, mx.row_end, mx.col_begin, alignment.col_begin));
       push_if_not_empty(affected, Matrix(mx, mx.row_begin, mx.row_end, alignment.col_end, mx.col_end));
