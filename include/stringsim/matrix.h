@@ -1,5 +1,5 @@
-#ifndef WE_MATRIX_H
-#define WE_MATRIX_H
+#ifndef STRINGSIM_MATRIX_H
+#define STRINGSIM_MATRIX_H
 
 #include <vector>
 #include <cstddef>

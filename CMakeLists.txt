@@ -1,10 +1,10 @@
 cmake_minimum_required (VERSION 2.6)
-project (WatermanEggert)
+project (stringsim)
 enable_testing()
 
 option(BUILD_TESTS "Build the tests" ON)
 
-add_library(WatermanEggert INTERFACE)
+add_library(stringsim INTERFACE)
 include_directories(include)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -Wall -Wno-long-long -pedantic")

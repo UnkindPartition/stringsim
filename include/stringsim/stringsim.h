@@ -1,9 +1,9 @@
-#ifndef WATERMAN_EGGERT_H
-#define WATERMAN_EGGERT_H
+#ifndef STRINGSIM_H
+#define STRINGSIM_H
 
 #include <vector>
 #include <algorithm>
-#include "WatermanEggert/matrix.h"
+#include "stringsim/matrix.h"
 
 struct Scoring {
   long match_value,
@@ -176,4 +176,4 @@ template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   return total_score;
 }
 
-#endif // WATERMAN_EGGERT_H
+#endif // STRINGSIM_H

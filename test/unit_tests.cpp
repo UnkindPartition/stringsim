@@ -1,4 +1,4 @@
-#include "WatermanEggert/WatermanEggert.h"
+#include "stringsim/stringsim.h"
 #include "test_utils.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
