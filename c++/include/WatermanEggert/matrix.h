@@ -35,10 +35,10 @@ class Matrix {
     {}
     ~Matrix() = default;
 
-    Matrix duplicate(const Matrix &mx) {
-      Matrix copy(mx);
+    Matrix duplicate() const {
+      Matrix copy(*this);
       // copy the payload
-      copy.matrix = std::make_shared<std::vector<long>>(*mx.matrix);
+      copy.matrix = std::make_shared<std::vector<long>>(*matrix);
       return copy;
     }
 
