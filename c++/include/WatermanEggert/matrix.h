@@ -33,16 +33,14 @@ class Matrix {
       : matrix (mx.matrix), rows (mx.rows), cols (mx.cols),
         row_begin (row_begin), row_end (row_end), col_begin (col_begin), col_end (col_end)
     {}
-    // Copy constructor
-    Matrix(const Matrix &mx)
-      : matrix(std::make_shared<std::vector<long>>(*(mx.matrix))),
-        rows (mx.rows), cols (mx.cols),
-        row_begin (mx.row_begin), row_end (mx.row_end), col_begin (mx.col_begin), col_end (mx.col_end)
-    {}
-    // Copy assignment is not supported (simply because I don't see a need for
-    // it so far...)
-    Matrix& operator=(const Matrix &rhs) = delete;
     ~Matrix() = default;
+
+    Matrix duplicate(const Matrix &mx) {
+      Matrix copy(mx);
+      // copy the payload
+      copy.matrix = std::make_shared<std::vector<long>>(*mx.matrix);
+      return copy;
+    }
 
     // Is the view empty?
     bool empty() const {
