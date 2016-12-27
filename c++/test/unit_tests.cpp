@@ -167,3 +167,18 @@ TEST(find_alignment_and_update, case1) {
     Matrix(matrix, 0, 1, 0, 1)
     }));
 }
+TEST(similarity, case_simple) {
+  ASSERT_EQ(0, similarity(scoring, string("foo"), string("faa")));
+  ASSERT_EQ(2, similarity(scoring, string("fao"), string("faa")));
+  ASSERT_EQ(0, similarity(scoring, string("aoa"), string("aia")));
+  ASSERT_EQ(3, similarity(scoring, string("aoaa"), string("aiaa")));
+  ASSERT_EQ(26, similarity(scoring, string("KingGeorge"), string("KingGeorge")));
+}
+TEST(similarity, case_twopart) {
+  ASSERT_EQ(22, similarity(scoring, string("KingGeorge"), string("GeorgeKing")));
+  ASSERT_EQ(22, similarity(scoring, string("King1George"), string("George2King")));
+  ASSERT_EQ(22, similarity(scoring, string("King1George"), string("GeorgeKing")));
+}
+TEST(similarity, case_threepart) {
+  ASSERT_EQ(33-12, similarity(scoring, string("OneTwoThree"), string("ThreeTwoOne")));
+}

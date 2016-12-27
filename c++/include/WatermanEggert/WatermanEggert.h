@@ -130,7 +130,7 @@ template<typename V> void update_matrix(Scoring scoring, const V &a, const V &b,
   }
 }
 
-// Find the best alignment in a set of computed matrices
+// Find the best alignment in a non-empty set of computed matrices
 template<typename V> Matrix choose_alignment(Scoring scoring, const V &a, const V &b, const std::vector<Matrix> &matrices) {
   std::vector<long> scores(matrices.size());
   for (size_t i = 0; i < matrices.size(); i++) {
@@ -141,8 +141,39 @@ template<typename V> Matrix choose_alignment(Scoring scoring, const V &a, const 
 }
 
 template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
-  // TODO
-  return 0;
+  long total_score = 0L;
+  Matrix matrix(a.size(), b.size());
+  std::vector<Matrix> affected, unaffected;
+  fill_matrix(scoring, a, b, matrix);
+  std::vector<Matrix> matrices({matrix});
+  while (!matrices.empty()) {
+    Matrix alignment = choose_alignment(scoring, a, b, matrices);
+
+    if (alignment.empty())
+      break;
+
+    const long score_inc =
+      // value of the alignment
+      alignment(alignment.row_end-1, alignment.col_end-1)
+      // penalty for adding another part
+      + scoring.part_value;
+
+    if (score_inc <= 0)
+      break;
+
+    total_score += score_inc;
+
+    std::tie(unaffected, affected) = remove_alignment(matrices, alignment);
+
+    // update the affected matrices
+    for (Matrix &mx : affected) {
+      update_matrix(scoring, a, b, mx);
+    }
+    // merge matrices together
+    matrices = unaffected;
+    matrices.insert(matrices.end(), affected.begin(), affected.end());
+  };
+  return total_score;
 }
 
 #endif // WATERMAN_EGGERT_H
