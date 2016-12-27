@@ -9,9 +9,9 @@
 class Matrix {
   private:
     std::shared_ptr<std::vector<long>> matrix; // row-major
-    const size_t rows, cols;
+    size_t rows, cols;
   public:
-    const size_t row_begin, row_end, col_begin, col_end;
+    size_t row_begin, row_end, col_begin, col_end;
     Matrix(size_t rows, size_t cols)
       : matrix(std::make_shared<std::vector<long>>(rows * cols)),
         rows (rows), cols (cols), row_begin (0), row_end (rows), col_begin (0), col_end (cols)
