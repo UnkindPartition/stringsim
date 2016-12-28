@@ -182,3 +182,6 @@ TEST(similarity, case_twopart) {
 TEST(similarity, case_threepart) {
   ASSERT_EQ(33-12, similarity(scoring, string("OneTwoThree"), string("ThreeTwoOne")));
 }
+TEST(similarity, regr1) {
+  ASSERT_EQ(1, similarity(Scoring({4L,-2L,-3L,-3L}), string("Ve"), string("Vi")));
+}
