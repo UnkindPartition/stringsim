@@ -7,6 +7,8 @@
 #include <memory>
 #include <cassert>
 
+namespace stringsim {
+
 class Matrix {
   private:
     std::shared_ptr<std::vector<long>> matrix; // row-major
@@ -123,5 +125,7 @@ class Matrix {
       return max_val;
     }
 };
+
+} // namespace stringsim
 
 #endif

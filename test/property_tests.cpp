@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace rc;
+using namespace stringsim;
 
 inline string aString() { return *gen::container<std::string>(gen::inRange('a', 'e')); }
 

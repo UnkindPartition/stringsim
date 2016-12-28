@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace testing;
+using namespace stringsim;
 
 TEST(fill_matrix, case_one_mismatch) {
   ASSERT_THAT(alloc_fill_matrix("a", "b").elements(), ElementsAre(0));

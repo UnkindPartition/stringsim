@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "stringsim/matrix.h"
 
+namespace stringsim {
+
 struct Scoring {
   long match_value,
        mismatch_value,
@@ -175,5 +177,7 @@ template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   };
   return total_score;
 }
+
+} // namespace stringsim
 
 #endif // STRINGSIM_H
