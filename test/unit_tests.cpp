@@ -184,5 +184,11 @@ TEST(similarity, case_threepart) {
   ASSERT_EQ(33-12, similarity(scoring, string("OneTwoThree"), string("ThreeTwoOne")));
 }
 TEST(similarity, regr1) {
-  ASSERT_EQ(1, similarity(Scoring({4L,-2L,-3L,-3L}), string("Ve"), string("Vi")));
+  ASSERT_EQ(1, similarity(Scoring({4L,-2L,-3L,-3L,0L}), string("Ve"), string("Vi")));
+}
+TEST(similarity, min_len) {
+  ASSERT_EQ(6, similarity(Scoring({1,-1,-1,0,0}), string("xxxzyy"), string("yyzxxx")));
+  ASSERT_EQ(6, similarity(Scoring({1,-1,-1,0,1}), string("xxxzyy"), string("yyzxxx")));
+  ASSERT_EQ(5, similarity(Scoring({1,-1,-1,0,2}), string("xxxzyy"), string("yyzxxx")));
+  ASSERT_EQ(3, similarity(Scoring({1,-1,-1,0,3}), string("xxxzyy"), string("yyzxxx")));
 }

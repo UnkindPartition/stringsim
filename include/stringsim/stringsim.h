@@ -12,6 +12,7 @@ struct Scoring {
        mismatch_value,
        space_value,
        part_value;
+  size_t min_len;
 };
 
 template<typename V> inline long compute_matrix_elt(Scoring scoring, const V &a, const V &b,
@@ -151,8 +152,11 @@ template<typename V> long similarity(Scoring scoring, const V &a, const V &b) {
   while (!matrices.empty()) {
     Matrix alignment = choose_alignment(scoring, a, b, matrices);
 
-    if (alignment.empty())
+    if (alignment.empty()
+      || alignment.row_end - alignment.row_begin < scoring.min_len
+      || alignment.col_end - alignment.col_begin < scoring.min_len) {
       break;
+    }
 
     const long score_inc =
       // value of the alignment
