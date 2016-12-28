@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <utility>
 #include <memory>
+#include <cassert>
 
 class Matrix {
   private:
@@ -57,6 +58,10 @@ class Matrix {
       return true;
     }
     long operator()(size_t i, size_t j) const {
+      assert(i >= row_begin);
+      assert(j >= col_begin);
+      assert(i < row_end);
+      assert(j < col_end);
       return (*matrix)[i * cols + j];
     }
     long& operator()(size_t i, size_t j) {
@@ -90,6 +95,7 @@ class Matrix {
     // Returns the coordinates of the maximum element within the submatrix.
     // Relies on the fact that the matrix is non-negative.
     std::pair<size_t,size_t> max_element() const {
+      assert(!empty());
       size_t max_i = 0, max_j = 0;
       long max_val = 0;
       for (size_t i = row_begin; i < row_end; i++) {
@@ -100,6 +106,10 @@ class Matrix {
           max_val = operator()(i,j);
         }
       }}
+      assert(max_i >= row_begin);
+      assert(max_j >= col_begin);
+      assert(max_i < row_end);
+      assert(max_j < col_end);
       return std::pair<size_t,size_t>(max_i,max_j);
     }
     long max_value() const {
