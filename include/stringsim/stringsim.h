@@ -42,7 +42,7 @@ template<typename V> void fill_matrix(Scoring scoring, const V &a, const V &b, M
 
 template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V &b, const Matrix &matrix) {
   if (matrix.empty()) {
-    return Matrix(matrix, 0, 0, 0, 0);
+    return matrix;
   }
   size_t row_begin, row_end, col_begin, col_end;
 
@@ -59,11 +59,11 @@ template<typename V> Matrix find_alignment(Scoring scoring, const V &a, const V 
     row_begin = i;
     col_begin = j;
 
-    if (i > 0 && j > 0 && this_value == matrix(i-1,j-1) + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value)) {
+    if (i > matrix.row_begin && j > matrix.col_begin && this_value == matrix(i-1,j-1) + (a[i] == b[j] ? scoring.match_value : scoring.mismatch_value)) {
       i--; j--;
-    } else if (i > 0 && this_value == matrix(i-1,j) + scoring.space_value) {
+    } else if (i > matrix.row_begin && this_value == matrix(i-1,j) + scoring.space_value) {
       i--;
-    } else if (j > 0 && this_value == matrix(i,j-1) + scoring.space_value) {
+    } else if (j > matrix.col_begin && this_value == matrix(i,j-1) + scoring.space_value) {
       j--;
     } else {
       break; // e.g. we are at (0,3), and this is the beginning

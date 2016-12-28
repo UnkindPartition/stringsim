@@ -96,7 +96,7 @@ class Matrix {
     // Relies on the fact that the matrix is non-negative.
     std::pair<size_t,size_t> max_element() const {
       assert(!empty());
-      size_t max_i = 0, max_j = 0;
+      size_t max_i = row_begin, max_j = col_begin;
       long max_val = 0;
       for (size_t i = row_begin; i < row_end; i++) {
       for (size_t j = col_begin; j < col_end; j++) {
